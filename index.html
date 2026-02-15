@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #2d1b4e;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 60px 50px;
+            background: #3d2b5e;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            min-width: 500px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 48px;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+        }
+        
+        .question {
+            font-size: 28px;
+            color: #ffffff;
+            margin-bottom: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(192, 132, 252, 0.8),
+                         0 0 20px rgba(240, 171, 252, 0.6),
+                         0 0 30px rgba(192, 132, 252, 0.4);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
+            position: relative;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        
+        #yesBtn {
+            background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+        
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.6);
+        }
+        
+        #noBtn {
+            background: linear-gradient(135deg, #e0e0e0, #bdbdbd);
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .success {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .success h2 {
+            font-size: 48px;
+            color: #ff6b9d;
+            margin-bottom: 20px;
+        }
+        
+        .success p {
+            font-size: 24px;
+            color: #ffffff;
+        }
+        
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float 4s ease-in infinite;
+            opacity: 0;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 3px solid transparent;
+            border-right: 3px solid transparent;
+            border-bottom: 5px solid #ffd700;
+            opacity: 0.8;
+        }
+        
+        .star:before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 3px solid transparent;
+            border-right: 3px solid transparent;
+            border-top: 5px solid #ffd700;
+            top: 2px;
+            left: -3px;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b9d;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .ghost-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .ghost-popup.active {
+            display: flex;
+        }
+        
+        .ghost-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .floating-ghost {
+            position: absolute;
+            font-size: 60px;
+            animation: float-up 4s ease-in infinite;
+            opacity: 0;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(50vh) translateX(20px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(0);
+                opacity: 0;
+            }
+        }
+        
+        .ghost-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #808080;
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeInMessage 0.5s ease-in;
+        }
+        
+        .ghost-message.active {
+            display: block;
+        }
+        
+        .ghost-message-text {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        @keyframes fadeInMessage {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="hearts" id="confettiContainer"></div>
+    
+    <div class="ghost-popup" id="ghostPopup">
+        <div class="ghost-content" id="ghostContent"></div>
+    </div>
+    
+    <div class="ghost-message" id="ghostMessage">
+        <div class="ghost-message-text">I think you meant yes</div>
+    </div>
+    
+    <div class="container">
+        <div id="question-container">
+            <h1>💕</h1>
+            <div class="question">Will you be my Valentine?</div>
+            <div class="buttons">
+                <button id="yesBtn">Yes</button>
+                <button id="noBtn">No</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button id="ghostBtn" style="background: linear-gradient(135deg, #4a4a4a, #2a2a2a); color: white; padding: 10px 30px; font-size: 16px;">No I'll ghost you</button>
+            </div>
+        </div>
+        
+        <div class="success" id="success">
+            <h2>HEHEHE 😈</h2>
+            <p>I knew you'd say yes!</p>
+            <h1 style="margin-top: 20px;">💖💖💖</h1>
+        </div>
+    </div>
+    
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const ghostBtn = document.getElementById('ghostBtn');
+        const questionContainer = document.getElementById('question-container');
+        const successContainer = document.getElementById('success');
+        const confettiContainer = document.getElementById('confettiContainer');
+        const starsContainer = document.getElementById('stars');
+        const ghostPopup = document.getElementById('ghostPopup');
+        const ghostMessage = document.getElementById('ghostMessage');        
+        // Create static stars on page load
+        function createStars() {
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                const size = Math.random() * 0.5 + 0.5;
+                star.style.transform = `scale(${size})`;
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Create stars when page loads
+        createStars();
+        
+        const noTexts = [
+            "Aw...",
+            "Are you sure?",
+            "PLEASE-"
+        ];
+        let noIndex = -1;
+        
+        // Change the "No" button text when clicking
+        noBtn.addEventListener('click', () => {
+            noIndex = (noIndex + 1) % noTexts.length;
+            noBtn.textContent = noTexts[noIndex];
+        });
+        
+        // Handle "Yes" button click
+        yesBtn.addEventListener('click', () => {
+            questionContainer.style.display = 'none';
+            successContainer.style.display = 'block';
+            createConfetti();
+            createHearts();
+        });
+        
+        // Handle "Ghost" button click
+        ghostBtn.addEventListener('click', () => {
+            ghostPopup.classList.add('active');
+            createFloatingGhosts();
+            // Show message after ghosts finish
+            setTimeout(() => {
+                ghostPopup.classList.remove('active');
+                document.getElementById('ghostContent').innerHTML = '';
+                ghostMessage.classList.add('active');
+                // Hide message after 3 seconds
+                setTimeout(() => {
+                    ghostMessage.classList.remove('active');
+                }, 3000);
+            }, 6000);
+        });
+        
+        // Create floating ghosts that float upward
+        function createFloatingGhosts() {
+            const ghostContent = document.getElementById('ghostContent');
+            
+            
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const ghost = document.createElement('div');
+                    ghost.classList.add('floating-ghost');
+                    
+                    
+                    
+                    ghost.style.left = Math.random() * 100 + '%';
+                    ghost.innerHTML = '👻';
+                    ghost.style.fontSize = (Math.random() * 40 + 40) + 'px';
+                    ghost.style.animationDelay = Math.random() * 2 + 's';
+                    ghost.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    ghostContent.appendChild(ghost);
+                    
+                    // Remove ghost after animation
+                    setTimeout(() => {
+                        ghost.remove();
+                    }, 5000);
+                }, i * 300);
+            }
+        }
+        
+        // Create falling confetti animation
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffd700', '#00d4ff', '#ff69b4', '#7d3c98', '#9b59b6'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = (Math.random() * 8 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 8 + 5) + 'px';
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confettiContainer.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 30);
+            }
+        }
+        
+        // Create floating hearts animation
+        function createHearts() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    confettiContainer.appendChild(heart);
+                    
+                    // Remove heart after animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 4000);
+                }, i * 100);
+            }
+        }
+        
+        // Optional: Make "Yes" button grow slightly each time "No" is clicked
+        let yesSize = 20;
+        noBtn.addEventListener('click', () => {
+            yesSize += 1;
+            yesBtn.style.fontSize = yesSize + 'px';
+        });
+    </script>
+</body>
+</html>
